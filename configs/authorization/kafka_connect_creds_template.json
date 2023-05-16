@@ -1,0 +1,5 @@
+{
+  "sasl_plain_username": "__SASL_PLAIN_USERNAME__",
+  "sasl_plain_password": "__SASL_PLAIN_PASSWORD",
+  "bootstrap_servers": "__BOOTSTRAP_SERVERS__"
+}
