@@ -1,0 +1,4 @@
+.idea
+
+configs/authorization/spotify_connect.json
+configs/authorization/token.json
