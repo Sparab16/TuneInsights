@@ -1,0 +1,6 @@
+{
+  "client_id": "__CLIENT_ID__",
+  "client_secret": "__CLIENT_SECRET__",
+  "scopes": "__SCOPES__",
+  "redirect_uri": "__REDIRECT_URI__"
+}
