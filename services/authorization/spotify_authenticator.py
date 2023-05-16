@@ -4,24 +4,14 @@ import urllib.parse
 import requests
 import webbrowser
 
+from utils.config_mgmt.config_io import ConfigIO
+
 
 class SpotifyAuthenticator:
-    __spotify_connect_file = "../../configs/authorization/spotify_connect.json"
-    __token_file = "../../configs/authorization/token.json"
 
-    @classmethod
-    def __read_json(cls, file_path):
-        with open(file_path) as file:
-            return json.loads(file.read())
-
-    @classmethod
-    def __write_json(cls, json_val, file_path):
-        with open(file_path, 'w') as file:
-            json.dump(json_val, file, ensure_ascii=False, indent=4)
-
-    @classmethod
-    def get_auth_token(cls):
-        spotify_connect_data = cls.__read_json(cls.__spotify_connect_file)
+    @staticmethod
+    def get_auth_token():
+        spotify_connect_data = ConfigIO.read_json(ConfigIO.spotify_connect_file)
 
         authorize_url = 'https://accounts.spotify.com/authorize?'
 
@@ -36,14 +26,14 @@ class SpotifyAuthenticator:
 
         authorization_code = input('Enter the authorization code from the redirect URI: ')
 
-        token_data = cls.__read_json(cls.__token_file)
+        token_data = ConfigIO.read_json(ConfigIO.token_file)
         token_data["auth_token"] = authorization_code
-        cls.__write_json(token_data, cls.__token_file)
+        ConfigIO.write_json(token_data, ConfigIO.token_file)
 
-    @classmethod
-    def get_access_token(cls):
-        spotify_connect_data = cls.__read_json(cls.__spotify_connect_file)
-        token_data = cls.__read_json(cls.__token_file)
+    @staticmethod
+    def get_access_token():
+        spotify_connect_data = ConfigIO.read_json(ConfigIO.spotify_connect_file)
+        token_data = ConfigIO.read_json(ConfigIO.token_file)
 
         access_url = "https://accounts.spotify.com/api/token"
 
@@ -66,12 +56,12 @@ class SpotifyAuthenticator:
         token_data["access_token"] = access_response["access_token"]
         token_data["refresh_token"] = access_response["refresh_token"]
 
-        cls.__write_json(token_data, cls.__token_file)
+        ConfigIO.write_json(token_data, ConfigIO.token_file)
 
-    @classmethod
-    def get_refresh_token(cls):
-        spotify_connect_data = cls.__read_json(cls.__spotify_connect_file)
-        token_data = cls.__read_json(cls.__token_file)
+    @staticmethod
+    def get_refresh_token():
+        spotify_connect_data = ConfigIO.read_json(ConfigIO.spotify_connect_file)
+        token_data = ConfigIO.read_json(ConfigIO.token_file)
 
         access_url = "https://accounts.spotify.com/api/token"
 
@@ -89,8 +79,6 @@ class SpotifyAuthenticator:
         response = requests.post(url=access_url, data=data, headers=headers)
 
         access_response = json.loads(response.content.decode("utf-8"))
-
         token_data["access_token"] = access_response["access_token"]
-        token_data["refresh_token"] = access_response["refresh_token"]
 
-        cls.__write_json(token_data, cls.__token_file)
+        ConfigIO.write_json(token_data, ConfigIO.token_file)
