@@ -33,9 +33,9 @@ class SpotifyProducer:
         config["sasl_plain_username"] = kafka_connect_creds_data["sasl_plain_username"]
         config["sasl_plain_password"] = kafka_connect_creds_data["sasl_plain_password"]
 
-        # Data serialization configs
+        # # Data serialization configs
         config["key_serializer"] = str.encode
-        config["value_serializer"] = str.encode
+        # config["value_serializer"] = bytes
 
         return config
 
@@ -52,3 +52,9 @@ class SpotifyProducer:
             None
         """
         self.producer.send(topic=topic_name, key=key, value=value)
+
+    def stop(self):
+        try:
+            self.producer.close()
+        except Exception as e:
+            print(e)

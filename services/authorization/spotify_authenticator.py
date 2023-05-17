@@ -30,6 +30,8 @@ class SpotifyAuthenticator:
         token_data["auth_token"] = authorization_code
         ConfigIO.write_json(token_data, ConfigIO.token_file)
 
+        print('Authentication token successfully updated..')
+
     @staticmethod
     def get_access_token():
         spotify_connect_data = ConfigIO.read_json(ConfigIO.spotify_connect_file)
@@ -58,6 +60,8 @@ class SpotifyAuthenticator:
 
         ConfigIO.write_json(token_data, ConfigIO.token_file)
 
+        print("Access token successfully updated...")
+
     @staticmethod
     def get_refresh_token():
         spotify_connect_data = ConfigIO.read_json(ConfigIO.spotify_connect_file)
@@ -82,3 +86,5 @@ class SpotifyAuthenticator:
         token_data["access_token"] = access_response["access_token"]
 
         ConfigIO.write_json(token_data, ConfigIO.token_file)
+
+        print('Refresh token successfully updated...')
