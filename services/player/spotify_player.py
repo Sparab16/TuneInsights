@@ -4,6 +4,7 @@ import json
 
 from utils.config_mgmt.config_io import ConfigIO
 from app.produce.spotify_producer import SpotifyProducer
+from services.authorization.spotify_authenticator import SpotifyAuthenticator
 
 
 class SpotifyPlayer:
@@ -41,14 +42,20 @@ class SpotifyPlayer:
 
                     # Send data to kafka topic
                     producer.send_data(topic_name='playback_player',
-                                            value=json.dumps(response.json()),
+                                            value=response.content,
                                             key=playback_data['device']['id'])
                     print(playback_data)
-                # time.sleep(2)
+                elif response.status_code == 401:
+                    error = response.json()['error']['message']
+                    if error == 'The access token expired':
+                        SpotifyAuthenticator.get_refresh_token()
+                else:
+                    print('Playback not there. Please start some track')
+
+                time.sleep(2)
 
         except KeyboardInterrupt:
             pass
-        except requests.exceptions.RequestException as e:
-            print("Error Occurred during API request: ", str(e))
-        except Exception as e:
-            print("Error Occurred: ", str(e))
+        finally:
+            producer.stop()
+            print("Producer stopped..")
