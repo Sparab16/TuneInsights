@@ -13,11 +13,7 @@ class OpenSearchClient:
             use_ssl=True
         )
 
-        self.index_name = None
-
     def create_index(self, index_name):
-
-        self.index_name = index_name
 
         is_index_exist = self.client.indices.exists(index_name)
 
@@ -28,10 +24,10 @@ class OpenSearchClient:
         else:
             print(f"Index '{index_name}' is already exist")
 
-    def index_document(self, json_doc, id):
+    def index_document(self, index_name, json_doc, id):
 
         self.client.index(
-            index=self.index_name,
+            index=index_name,
             body=json_doc,
             id=id
         )
