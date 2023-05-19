@@ -49,10 +49,13 @@ class SpotifyPlayer:
                     error = response.json()['error']['message']
                     if error == 'The access token expired':
                         SpotifyAuthenticator.get_refresh_token()
+                        headers = {
+                            "Authorization": f"Bearer {token_data['access_token']}"
+                        }
                 else:
                     print('Playback not there. Please start some track')
 
-                time.sleep(2)
+                time.sleep(0.5)
 
         except KeyboardInterrupt:
             pass
