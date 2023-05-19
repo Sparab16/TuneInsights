@@ -1,0 +1,5 @@
+{
+  "host": "__HOST__",
+  "port": "__PORT__",
+  "auth": ["__ACCESS_KEY__", "__ACCESS_SECRET__"]
+}

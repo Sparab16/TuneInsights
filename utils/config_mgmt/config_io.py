@@ -6,6 +6,7 @@ class ConfigIO:
     spotify_connect_file = "configs/authorization/spotify_connect.json"
     token_file = "configs/authorization/token.json"
     kafka_connect_creds_file = "configs/authorization/kafka_connect_creds.json"
+    opensearch_connect_creds_file = "configs/authorization/opensearch_connect_creds.json"
 
     @staticmethod
     def read_json(file_path):

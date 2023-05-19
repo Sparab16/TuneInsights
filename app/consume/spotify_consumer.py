@@ -58,8 +58,10 @@ class SpotifyConsumer:
 
                 if len(json_doc.items()) > 0:
                     print(record.partition, record.offset, json_doc)
+                    return json_doc
         else:
             print("No records exist at time. Will check for new records in 2 seconds..")
+            return {}
 
     def stop(self):
         try:
