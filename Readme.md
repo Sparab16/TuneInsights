@@ -28,8 +28,8 @@ Before running the project, make sure you have the following prerequisites insta
 remotely accessible(<a href="https://www.conduktor.io/kafka/how-to-start-kafka-with-conduktor/">Conduktor</a> or 
 <a href="https://www.confluent.io/confluent-cloud/?utm_medium=sem&utm_source=bing&utm_campaign=ch.sem_br.brand_tp.prs_tgt.confluent-brand_mt.mbm_rgn.india_lng.eng_dv.all_con.confluent-cloud&utm_term=%2Bconfluent%20%2Bcloud&creative=&device=c&placement=&msclkid=abc6040c586011993d406050f8ae5ae1">
 Confluent</a>)
-- Opensearch Cluster, either locally(Using <a href="https://opensearch.org/docs/latest/install-and-configure/install-dashboards/docker/">Docker</a>)
-or remotely accessible(Using <a href="https://bonsai.io/">Bonsai.io</a>)
+  - Opensearch Cluster, either locally(Using <a href="https://opensearch.org/docs/latest/install-and-configure/install-dashboards/docker/">Docker</a>)
+  or remotely accessible(Using <a href="https://bonsai.io/">Bonsai.io</a>)
 
 ## Run Locally
 
@@ -61,32 +61,33 @@ or remotely accessible(Using <a href="https://bonsai.io/">Bonsai.io</a>)
               "bootstrap_servers": "__BOOTSTRAP_SERVERS__"
             }
       ```
-      - OpenSearch Connect Credentials
-          ```json
-          {
-            "host": "__HOST__",
-            "port": "__PORT__",
-            "auth": ["__ACCESS_KEY__", "__ACCESS_SECRET__"]
-        }
-        ```
+    - OpenSearch Connect Credentials
+        ```json
+        {
+          "host": "__HOST__",
+          "port": "__PORT__",
+          "auth": ["__ACCESS_KEY__", "__ACCESS_SECRET__"]
+      }
+      ```
     
-      - Spotify Connect Credentials
-        ```json
-        {
-          "client_id": "__CLIENT_ID__",
-          "client_secret": "__CLIENT_SECRET__",
-          "scopes": "__SCOPES__",
-          "redirect_uri": "__REDIRECT_URI__"
-        }
-        ```
-      - Spotify API Tokens
-        ```json
-        {
-            "auth_token": "",
-            "refresh_token": "",
-            "access_token": ""
-        }
-        ```
+    - Spotify Connect Credentials
+      ```json
+      {
+        "client_id": "__CLIENT_ID__",
+        "client_secret": "__CLIENT_SECRET__",
+        "scopes": "__SCOPES__",
+        "redirect_uri": "__REDIRECT_URI__"
+      }
+      ```
+      
+    - Spotify API Tokens
+      ```json
+      {
+          "auth_token": "",
+          "refresh_token": "",
+          "access_token": ""
+      }
+      ```
       
 - Run the `produce_topic.py` and `consume_topic.py`. This will start reading streaming data from the 
 Spotify Playback API and sending it to the specified Kafka topic.
