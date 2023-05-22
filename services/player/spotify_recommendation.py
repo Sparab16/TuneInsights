@@ -1,5 +1,8 @@
 import requests
 from utils.config_mgmt.config_io import ConfigIO
+from utils.logging.logger import Logger
+
+logger = Logger('logs/spotify_recommendation.log')
 
 
 class SpotifyRecommendation:
@@ -14,9 +17,12 @@ class SpotifyRecommendation:
         Returns:
             list: A list of artist IDs.
         """
-        artists_list = record['item']['artists']
-        artist_ids = [artist['id'] for artist in artists_list]
-        return artist_ids
+        try:
+            artists_list = record['item']['artists']
+            artist_ids = [artist['id'] for artist in artists_list]
+            return artist_ids
+        except Exception as e:
+            logger.error(f"Failed to retrieve artists id from record with following error: {str(e)}")
 
     @staticmethod
     def _get_track_id(record):
@@ -29,7 +35,10 @@ class SpotifyRecommendation:
         Returns:
             str: The track ID.
         """
-        return record['item']['id']
+        try:
+            return record['item']['id']
+        except Exception as e:
+            logger.error(f"Failed to retrieve id from record with following error: {str(e)}")
 
     @staticmethod
     def _create_recommended_pairs(recommended_data):
@@ -42,18 +51,21 @@ class SpotifyRecommendation:
         Returns:
             dict: A dictionary of recommended song pairs.
         """
-        recommendations = []
+        try:
+            recommendations = []
 
-        for track in recommended_data['tracks']:
-            if track['name'] != '':
-                recommendations.append({
-                    'name': track['name'],
-                    'spotify_link': track['external_urls']['spotify'],
-                    'popularity': track['popularity'],
-                    'album_name': track['album']['name']
-                })
+            for track in recommended_data['tracks']:
+                if track['name'] != '':
+                    recommendations.append({
+                        'name': track['name'],
+                        'spotify_link': track['external_urls']['spotify'],
+                        'popularity': track['popularity'],
+                        'album_name': track['album']['name']
+                    })
 
-        return {'recommendations': recommendations}
+            return {'recommendations': recommendations}
+        except Exception as e:
+            logger.error(f"Failed to create recommended pairs due to following error: {str(e)}")
 
     @staticmethod
     def recommend_song(record):
@@ -85,9 +97,15 @@ class SpotifyRecommendation:
             'seed_tracks': seed_tracks
         }
 
-        response = requests.get(url=api_url, params=query_params, headers=headers)
+        try:
+            response = requests.get(url=api_url, params=query_params, headers=headers)
 
-        if response.status_code == 200:
-            recommended_data = response.json()
-            return SpotifyRecommendation._create_recommended_pairs(recommended_data)
+            if response.status_code == 200:
+                recommended_data = response.json()
+                return SpotifyRecommendation._create_recommended_pairs(recommended_data)
+            else:
+                logger.error(f"Failed to retrieve recommendations. Status code: {response.status_code}")
+        except Exception as e:
+            logger.error(f"Failed to recommend songs with the following error: {str(e)}")
 
+        return None

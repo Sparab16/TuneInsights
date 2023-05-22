@@ -1,6 +1,8 @@
 from kafka import KafkaProducer
-
 from utils.config_mgmt.config_io import ConfigIO
+from utils.logging.logger import Logger
+
+logger = Logger('logs/spotify_producer.log')
 
 
 class SpotifyProducer:
@@ -12,7 +14,10 @@ class SpotifyProducer:
         """
         Initializes the SpotifyProducer class and creates a KafkaProducer instance.
         """
-        self.producer = KafkaProducer(**SpotifyProducer.get_config())
+        try:
+            self.producer = KafkaProducer(**SpotifyProducer.get_config())
+        except Exception as e:
+            logger.error(f"Failed to initialize KafkaProducer with the following error: {str(e)}")
 
     @staticmethod
     def get_config():
@@ -51,10 +56,13 @@ class SpotifyProducer:
         Returns:
             None
         """
-        self.producer.send(topic=topic_name, key=key, value=value)
+        try:
+            self.producer.send(topic=topic_name, key=key, value=value)
+        except Exception as e:
+            logger.error(f"Failed to send message to Kafka topic '{topic_name}' with the following error: {str(e)}")
 
     def stop(self):
         try:
             self.producer.close()
         except Exception as e:
-            print(e)
+            logger.error(f"Failed to close KafkaProducer with the following error: {str(e)}")

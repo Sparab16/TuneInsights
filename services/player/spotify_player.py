@@ -1,10 +1,11 @@
 import requests
 import time
-import json
-
 from utils.config_mgmt.config_io import ConfigIO
 from app.produce.spotify_producer import SpotifyProducer
 from services.authorization.spotify_authenticator import SpotifyAuthenticator
+from utils.logging.logger import Logger
+
+logger = Logger('logs/spotify_player.log')
 
 
 class SpotifyPlayer:
@@ -42,9 +43,11 @@ class SpotifyPlayer:
 
                     # Send data to kafka topic
                     producer.send_data(topic_name='playback_player',
-                                            value=response.content,
-                                            key=playback_data['device']['id'])
+                                       value=response.content,
+                                       key=playback_data['device']['id'])
+                    logger.info("Playback data successfully sent to Kafka topic")
                     print(playback_data)
+
                 elif response.status_code == 401:
                     error = response.json()['error']['message']
                     if error == 'The access token expired':
@@ -59,6 +62,8 @@ class SpotifyPlayer:
 
         except KeyboardInterrupt:
             pass
+        except Exception as e:
+            logger.error(f"Failed to get playback state with the following error: {str(e)}")
         finally:
             producer.stop()
-            print("Producer stopped..")
+            logger.info("Producer stopped")

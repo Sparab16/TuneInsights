@@ -1,14 +1,18 @@
 import json
-import struct
 
 from kafka import KafkaConsumer
 from utils.config_mgmt.config_io import ConfigIO
+from utils.logging.logger import Logger
+
+logger = Logger('logs/spotify_consumer.log')
 
 
 class SpotifyConsumer:
-
     def __init__(self, topic, consumer_group_id):
-        self.consumer = KafkaConsumer(topic, group_id=consumer_group_id, **SpotifyConsumer.get_config())
+        try:
+            self.consumer = KafkaConsumer(topic, group_id=consumer_group_id, **SpotifyConsumer.get_config())
+        except Exception as e:
+            logger.error(f"Failed to initialize KafkaConsumer with the following error: {str(e)}")
 
     @staticmethod
     def get_config():
@@ -40,31 +44,31 @@ class SpotifyConsumer:
         return config
 
     def consume_data(self):
+        try:
+            records_dict = self.consumer.poll(timeout_ms=2000, max_records=10000)
 
-        records_dict = self.consumer.poll(timeout_ms=2000, max_records=10000)
+            records_list = list(records_dict.values())
 
-        records_list = list(
-            records_dict.values())
+            if len(records_list) > 0:
+                records_list = records_list[0]  # Get the list of records
 
-        if len(records_list) > 0:
+                for record in records_list:
+                    cleaned_value = record.value.replace("\x00", '{}')  # In some cases we were seeing value='\x00'
+                    # which is causing problems
 
-            records_list = records_list[0]  # Get the list of records
+                    json_doc = json.loads(cleaned_value)
 
-            for record in records_list:
-                cleaned_value = record.value.replace("\x00", '{}')  # In some cases we were seeing value='\x00'
-                # which is causing problems
-
-                json_doc = json.loads(cleaned_value)
-
-                if len(json_doc.items()) > 0:
-                    print(record.partition, record.offset, json_doc)
-                    return json_doc
-        else:
-            print("No records exist at time. Will check for new records in 2 seconds..")
-            return {}
+                    if len(json_doc.items()) > 0:
+                        logger.info(f"Consumed record from partition {record.partition}, offset {record.offset}: {json_doc}")
+                        return json_doc
+            else:
+                logger.info("No records exist at the moment. Will check for new records few seconds..")
+                return {}
+        except Exception as e:
+            logger.error(f"Failed to consume data with the following error: {str(e)}")
 
     def stop(self):
         try:
             self.consumer.close()
         except Exception as e:
-            print(e)
+            logger.error(f"Failed to close KafkaConsumer with the following error: {str(e)}")

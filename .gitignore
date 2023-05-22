@@ -4,3 +4,4 @@ configs/authorization/spotify_connect.json
 configs/authorization/token.json
 configs/authorization/kafka_connect_creds.json
 configs/authorization/opensearch_connect_creds.json
+logs
