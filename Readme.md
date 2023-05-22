@@ -23,8 +23,7 @@ Before running the project, make sure you have the following prerequisites insta
 - kafka-python library (install using pip install kafka-python)
 - requests library (install using pip install requests)
 - opensearch library (install using pip install opensearch-py)
-- Apache Kafka cluster, either locally
-(Using <a href="https://www.conduktor.io/kafka/starting-kafka/">Windows Subsystem Linux</a>) or
+- Apache Kafka cluster, either locally (Using <a href="https://www.conduktor.io/kafka/starting-kafka/">Windows Subsystem Linux</a>) or
 remotely accessible(<a href="https://www.conduktor.io/kafka/how-to-start-kafka-with-conduktor/">Conduktor</a> or 
 <a href="https://www.confluent.io/confluent-cloud/?utm_medium=sem&utm_source=bing&utm_campaign=ch.sem_br.brand_tp.prs_tgt.confluent-brand_mt.mbm_rgn.india_lng.eng_dv.all_con.confluent-cloud&utm_term=%2Bconfluent%20%2Bcloud&creative=&device=c&placement=&msclkid=abc6040c586011993d406050f8ae5ae1">
 Confluent</a>)
